@@ -100,11 +100,11 @@ func ThumbController(w http.ResponseWriter, r *http.Request) {
 	renderImage(w, renderImagePath)
 
 	/*file, err := os.Open(tmpFile.Name())
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	defer file.Close()*/
+	  if err != nil {
+	      http.Error(w, err.Error(), http.StatusInternalServerError)
+	      return
+	  }
+	  defer file.Close()*/
 
 	/*buffer := make([]byte, 512)
 	  _, err = file.Read(buffer)
@@ -122,11 +122,11 @@ func ThumbController(w http.ResponseWriter, r *http.Request) {
 	  }*/
 
 	/*w.Header().Set("Content-Type", "image/jpeg")
-	_, err = io.Copy(w, file)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}*/
+	  _, err = io.Copy(w, file)
+	  if err != nil {
+	      http.Error(w, err.Error(), http.StatusInternalServerError)
+	      return
+	  }*/
 }
 
 func render404(w http.ResponseWriter) {
