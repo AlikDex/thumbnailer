@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	_ "net/http/pprof"
+	// _ "net/http/pprof"
 	"os"
 	"runtime"
 	"runtime/debug"
@@ -43,9 +43,9 @@ func main() {
 		}
 	}()
 
-	go func() {
-		log.Println(http.ListenAndServe("localhost:6060", nil))
-	}()
+	/*go func() {
+	    log.Println(http.ListenAndServe("localhost:6060", nil))
+	}()*/
 
 	srv := &http.Server{
 		Addr:         ":" + cfg.Server.Port,
