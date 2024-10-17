@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	// _ "net/http/pprof"
+	_ "net/http/pprof"
 	"os"
 	"runtime"
 	"runtime/debug"
@@ -37,15 +37,15 @@ func main() {
 
 	go func() {
 		for {
-			time.Sleep(1 * time.Minute) // Ожидание 1 минута
+			time.Sleep(5 * time.Minute) // Ожидание 1 минута
 			runtime.GC()                // Принудительная сборка мусора
 			debug.FreeOSMemory()        // Явно освобождаем память ОС
 		}
 	}()
 
-	/*go func() {
+	go func() {
 		log.Println(http.ListenAndServe("localhost:6060", nil))
-	}()*/
+	}()
 
 	srv := &http.Server{
 		Addr:         ":" + cfg.Server.Port,
