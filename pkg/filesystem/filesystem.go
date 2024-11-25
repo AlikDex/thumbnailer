@@ -1,31 +1,35 @@
 package filesystem
 
 import (
-    "os"
+	"os"
 )
 
 func IsFile(pathname string) bool {
-    info, err := os.Stat(pathname)
+	info, err := os.Stat(pathname)
 
-    if os.IsNotExist(err) {
-        return false
-    }
+	if os.IsNotExist(err) {
+		return false
+	}
 
-    return !info.IsDir()
+	return !info.IsDir()
 }
 
 func IsDir(dirname string) bool {
-    info, err := os.Stat(dirname)
+	info, err := os.Stat(dirname)
 
-    if os.IsNotExist(err) {
-        return false
-    }
+	if os.IsNotExist(err) {
+		return false
+	}
 
-    return info.IsDir()
+	return info.IsDir()
 }
 
 func IsExists(targetPath string) bool {
-    _, err := os.Stat(targetPath)
+	_, err := os.Stat(targetPath)
 
-    return !os.IsNotExist(err)
+	return !os.IsNotExist(err)
+}
+
+func MkDir(path string) error {
+	return os.MkdirAll(path, 0755)
 }

@@ -1,5 +1,0 @@
-server:
-  port: "8000"
-storage:
-  path: "/path/to/storage/"
-tmpDir: "/tmp"

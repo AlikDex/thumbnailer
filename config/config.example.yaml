@@ -1,0 +1,8 @@
+server:
+  port: "8015"
+storage:
+  path: "/path/to/storage/"
+upstream: "http://127.0.0.1"
+tmpDir: "/tmp"
+allovedImageExtensions: ["jpg","jpeg","png","webp"]
+allovedVideoExtensions: ["mp4"]
