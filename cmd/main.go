@@ -3,11 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
-
-	// _ "net/http/pprof"
 	"os"
-	"runtime"
-	"runtime/debug"
 	"time"
 
 	"app/internal/config"
@@ -26,28 +22,13 @@ func init() {
 }
 
 func main() {
-	debug.SetMemoryLimit(500 * 1024 * 1024)
-
 	r := mux.NewRouter()
 
-	r.HandleFunc("/{path:[^.]+\\.(?:jpg|jpeg|png|webp)}", controllers.ImageController).Methods("GET") // (.jpg|.jpeg|.png|.webp)
+	r.HandleFunc("/{path:[^.]+\\.(?:jpg|jpeg|png|webp)}", controllers.ImageController).Methods("GET")
 
 	r.Use(middleware.Recovery)
 
 	log.SetOutput(os.Stdout)
-	log.Printf("Server starting on port %s\n", cfg.Server.Port)
-
-	go func() {
-		for {
-			time.Sleep(5 * time.Minute) // Ожидание 1 минута
-			runtime.GC()                // Принудительная сборка мусора
-			debug.FreeOSMemory()        // Явно освобождаем память ОС
-		}
-	}()
-
-	/*go func() {
-	    log.Println(http.ListenAndServe("localhost:6060", nil))
-	}()*/
 
 	srv := &http.Server{
 		Addr:         ":" + cfg.Server.Port,
