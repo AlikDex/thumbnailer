@@ -38,13 +38,7 @@ func ResizeToWidth(srcFilepath string, width int, maxHeight *int, outFilepath st
 		cmd = exec.Command("convert", srcFilepath, "-thumbnail", w+"x", "-gravity", "center", "-crop", w+"x"+mh+"+0+0", "-strip", "-quality", "100", "+repage", outFilepath)
 	}
 
-	err := cmd.Run()
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return cmd.Run()
 }
 
 func CropToFit(srcFilepath string, width *int, height *int, outFilepath string) error {
@@ -68,13 +62,8 @@ func CropToFit(srcFilepath string, width *int, height *int, outFilepath string) 
 	// -resize 300x300^ -gravity center -crop 300x300+0+0 +repage
 	// -thumbnail 320x180^ -gravity center -crop 320x180+0+0 -unsharp 0x.5 -strip +repage
 	cmd := exec.Command("convert", srcFilepath, "-thumbnail", w+"x"+h+"^", "-gravity", "center", "-crop", w+"x"+h+"+0+0", "-strip", "-quality", "100", "+repage", outFilepath)
-	err := cmd.Run()
 
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return cmd.Run()
 }
 
 func Thumbnail16x9(srcFilepath string, width *int, height *int, outFilepath string) error {
@@ -94,7 +83,6 @@ func Thumbnail16x9(srcFilepath string, width *int, height *int, outFilepath stri
 
 	w := ""
 	h := ""
-	boxSize := "320x180"
 	var cmd *exec.Cmd
 	imgSize, err := getImageSize(srcFilepath)
 
@@ -102,76 +90,26 @@ func Thumbnail16x9(srcFilepath string, width *int, height *int, outFilepath stri
 		return fmt.Errorf("error: %s", err)
 	}
 
-	if isWiderThan16by9(imgSize.Width, imgSize.Height) {
-		if (width != nil && *width > 0) && (height != nil && *height > 0) {
-			w = strconv.Itoa(*width)
-			h = strconv.Itoa(int(float64(*width) * 9.0 / 16.0))
-		} else if height == nil {
-			w = strconv.Itoa(*width)
-			h = strconv.Itoa(int(float64(*width) * 9.0 / 16.0))
-		} else if width == nil {
-			h = strconv.Itoa(*height)
-			w = strconv.Itoa(int(float64(*height) * 16.0 / 9.0))
-		}
-
-		boxSize = w + "x" + h
-
-		cmd = exec.Command("convert", srcFilepath, "-resize", boxSize+"^", "-background", "black", "-gravity", "center", "-extent", boxSize, "-strip", "-quality", "100", "-colorspace", "sRGB", outFilepath)
-	} else {
-		if (width != nil && *width > 0) && (height != nil && *height > 0) {
-			w = strconv.Itoa(*width)
-			h = strconv.Itoa(int(float64(*width) * 9.0 / 16.0))
-		} else if height == nil {
-			w = strconv.Itoa(*width)
-			h = strconv.Itoa(int(float64(*width) * 9.0 / 16.0))
-		} else if width == nil {
-			h = strconv.Itoa(*height)
-			w = strconv.Itoa(int(float64(*height) * 16.0 / 9.0))
-		}
-
-		boxSize = w + "x" + h
-
-		cmd = exec.Command("convert", srcFilepath, "-resize", boxSize, "-background", "black", "-gravity", "center", "-extent", boxSize, "-strip", "-quality", "100", "-colorspace", "sRGB", outFilepath)
-	}
-
-	err = cmd.Run()
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-
-	/*if *width > 0 && *height > 0 {
+	if (width != nil && *width > 0) && (height != nil && *height > 0) {
 		w = strconv.Itoa(*width)
 		h = strconv.Itoa(int(float64(*width) * 9.0 / 16.0))
-
-		boxSize = w + "x" + h
 	} else if height == nil {
 		w = strconv.Itoa(*width)
 		h = strconv.Itoa(int(float64(*width) * 9.0 / 16.0))
-
-		boxSize = w + "x" + h
 	} else if width == nil {
 		h = strconv.Itoa(*height)
 		w = strconv.Itoa(int(float64(*height) * 16.0 / 9.0))
-
-		boxSize = w + "x" + h
-	}*/
-
-	/*w := strconv.Itoa(width)
-	h := strconv.Itoa(height)
-
-	// -resize 300x300^ -gravity center -crop 300x300+0+0 +repage
-	// -thumbnail 320x180^ -gravity center -crop 320x180+0+0 -unsharp 0x.5 -strip +repage
-	cmd := exec.Command("convert", srcFilepath, "-thumbnail", w+"x"+h+"^", "-gravity", "center", "-crop", w+"x"+h+"+0+0", "-unsharp", "-0x.5", "-strip", "+repage", outFilepath)
-	err := cmd.Run()
-
-	if err != nil {
-		return err
 	}
 
-	return nil*/
+	boxSize := w + "x" + h
+
+	if isWiderThan16by9(imgSize.Width, imgSize.Height) {
+		cmd = exec.Command("convert", srcFilepath, "-resize", boxSize+"^", "-background", "black", "-gravity", "center", "-extent", boxSize, "-strip", "-quality", "100", "-colorspace", "sRGB", outFilepath)
+	} else {
+		cmd = exec.Command("convert", srcFilepath, "-resize", boxSize, "-background", "black", "-gravity", "center", "-extent", boxSize, "-strip", "-quality", "100", "-colorspace", "sRGB", outFilepath)
+	}
+
+	return cmd.Run()
 }
 
 /**
