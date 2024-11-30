@@ -16,11 +16,6 @@ func Optimize(filename string, quality *int) error {
 
 	//jpegoptim -m <quality> <filepath>
 	cmd := exec.Command("jpegoptim", "-m", qualityParameter, filename)
-	err := cmd.Run()
 
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return cmd.Run()
 }
