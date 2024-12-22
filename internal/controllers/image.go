@@ -7,6 +7,7 @@ import (
 	"app/pkg/filesystem"
 	"fmt"
 	"io"
+	"log"
 	"mime"
 	"net/http"
 	"net/url"
@@ -55,7 +56,7 @@ func ImageController(w http.ResponseWriter, r *http.Request) {
 	cachePath := prepareCachePath(r.URL)
 	absolutePath := filepath.Join(cfg.Storage.Path, cachePath)
 
-	if filesystem.IsFile(absolutePath) {
+	if cfg.CacheEnable && filesystem.IsFile(absolutePath) {
 		renderImage(w, absolutePath)
 
 		return
@@ -138,6 +139,7 @@ func renderImage(w http.ResponseWriter, sourceFilepath string) {
 
 	if err != nil {
 		http.Error(w, "File not found", http.StatusNotFound)
+
 		return
 	}
 
@@ -148,11 +150,18 @@ func renderImage(w http.ResponseWriter, sourceFilepath string) {
 
 	contentType := mime.TypeByExtension(fileExtension)
 
+	if contentType == "" {
+		contentType = "application/octet-stream"
+	}
+
 	w.Header().Set("Content-Type", contentType)
+	w.Header().Set("Content-Length", strconv.FormatInt(fileInfo.Size(), 10))
+	w.WriteHeader(http.StatusOK)
+
 	_, err = io.Copy(w, file)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		log.Printf("Error copying file to response: %v", err)
 
 		return
 	}
