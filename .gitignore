@@ -27,6 +27,6 @@ go.work.sum
 .idea
 .vscode
 
-configs/config.yaml
+config/config.yaml
 ./main
 /var
