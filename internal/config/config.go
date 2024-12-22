@@ -27,6 +27,7 @@ type Config struct {
 	Upstream               string        `yaml:"upstream"`
 	AllovedVideoExtensions []string      `yaml:"allovedVideoExtensions"`
 	AllovedImageExtensions []string      `yaml:"allovedImageExtensions"`
+	CacheEnable            bool          `yaml:"cacheEnable"`
 }
 
 var (
@@ -72,5 +73,6 @@ func filterEmptyStrings(arr []string) []string {
 			result = append(result, str)
 		}
 	}
+
 	return result
 }
