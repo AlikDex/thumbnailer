@@ -1,8 +1,0 @@
-server:
-  port: "8015"
-storage:
-  path: "/home/asat/Work/GoProjects/thumbnailer/var"
-upstream: "http://185.132.176.26"
-tmpDir: "/dev/shm"
-allovedImageExtensions: ["jpg","jpeg","png","webp"]
-allovedVideoExtensions: ["mp4"]
